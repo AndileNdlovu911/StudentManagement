@@ -140,3 +140,12 @@ WHEN OTHERS THEN
 DBMS_OUTPUT.PUT_LINE('Error ocurred while enrolling student.');
 ROLLBACK;
 END;
+
+--Creating a view
+CREATE VIEW course_enrollments AS
+SELECT s.f_name, s.l_name, c.course_name, e.enrollment_date
+FROM enrollments e
+JOIN students s ON e.student_id = s.student_id
+JOIN courses c ON e.course_id = c.course_id;
+
+SELECT * FROM course_enrollments;
