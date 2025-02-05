@@ -74,3 +74,31 @@ WHEN OTHERS THEN
 DBMS_OUTPUT.PUT_LINE('Error occured while updating student:');
 ROLLBACK;
 END;
+
+-- delete student procedure
+CREATE OR REPLACE PROCEDURE delete_student(
+p_student_id IN NUMBER
+)AS
+enrollments_count NUMBER;
+BEGIN
+--First checking if student is enrolled
+SELECT COUNT(*) INTO enrollments_count
+FROM enrollments
+WHERE student_id = p_student_id;
+--If student is enrolled then we cannot delete 
+IF enrollments_count > 0 THEN
+DBMS_OUTPUT.PUT_LINE('Cannot delete student. Student enrolled in one or more courses!');
+RETURN;
+END IF;
+--Deleting student if there are no enrollments
+DELETE FROM students
+WHERE student_id = p_student_id;
+COMMIT;
+DBMS_OUTPUT.PUT_LINE('Student deleted successfully!');
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+DBMS_OUTPUT.PUT_LINE('Student not found.');
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('Error occured while deleting student.');
+ROLLBACK;
+END;
