@@ -102,3 +102,41 @@ WHEN OTHERS THEN
 DBMS_OUTPUT.PUT_LINE('Error occured while deleting student.');
 ROLLBACK;
 END;
+
+--Enrolling student in course procedure
+CREATE OR REPLACE PROCEDURE enroll_student(
+p_student_id IN NUMBER,
+p_course_id IN NUMBER
+)AS
+BEGIN
+--we are checking if the student exists
+DECLARE
+student_count NUMBER;
+BEGIN
+SELECT COUNT(*) INTO student_count FROM students
+WHERE student_id = p_student_id;
+IF student_count = 0 THEN
+DBMS_OUTPUT.PUT_LINE('Student does not exist.');
+RETURN;
+END IF;
+--Checking if course exists
+DECLARE
+course_count NUMBER;
+BEGIN
+SELECT COUNT(*) INTO course_count FROM courses 
+WHERE course_id = p_course_id;
+IF course_count = 0 THEN
+DBMS_OUTPUT.PUT_LINE('Course does not exist.');
+RETURN;
+END IF;
+--Enrolling students
+INSERT INTO enrollments (student_id, course_id) VALUES (p_student_id, p_course_id);
+COMMIT;
+DBMS_OUTPUT.PUT_LINE('Student enrolled successfully.');
+END;
+END;
+EXCEPTION
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('Error ocurred while enrolling student.');
+ROLLBACK;
+END;
