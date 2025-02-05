@@ -30,14 +30,14 @@ INSERT INTO students(student_id, f_name, l_name, date_of_birth, email) VALUES(2,
 INSERT INTO students(student_id, f_name, l_name, date_of_birth, email) VALUES(3, 'Khumbulani', 'Ndlovu', TO_DATE('04-10-2003', 'DD-MM-YYYY'), 'kb@notreal.com');
 
 -- inserting course information
-INSERT INTO courses(course_id, course_name, course_description) VALUES(1001, 'DALG103', 'Data Structures and Algorithms');
-INSERT INTO courses(course_id, course_name, course_description) VALUES(1002, 'DBMS101', 'Introduction to databases and SQL');
-INSERT INTO courses(course_id, course_name, course_description) VALUES(1003, 'NOPS101', 'Networks and Operating Systems');
+INSERT INTO courses(course_id, course_name, course_description) VALUES(1011, 'DALG103', 'Data Structures and Algorithms');
+INSERT INTO courses(course_id, course_name, course_description) VALUES(1012, 'DBMS101', 'Introduction to databases and SQL');
+INSERT INTO courses(course_id, course_name, course_description) VALUES(1013, 'NOPS101', 'Networks and Operating Systems');
 
 -- enrolling students into courses
-INSERT INTO enrollments(enrollment_id, student_id, course_id, enrollment_date) VALUES(21, 1, 1001, TRUNC(SYSDATE));
-INSERT INTO enrollments(enrollment_id, student_id, course_id, enrollment_date) VALUES(22, 2, 1001, TRUNC(SYSDATE));
-INSERT INTO enrollments(enrollment_id, student_id, course_id, enrollment_date) VALUES(23, 3, 1001, TRUNC(SYSDATE));
+INSERT INTO enrollments(enrollment_id, student_id, course_id, enrollment_date) VALUES(201, 1, 1011, TRUNC(SYSDATE));
+INSERT INTO enrollments(enrollment_id, student_id, course_id, enrollment_date) VALUES(202, 2, 1011, TRUNC(SYSDATE));
+INSERT INTO enrollments(enrollment_id, student_id, course_id, enrollment_date) VALUES(203, 3, 1012, TRUNC(SYSDATE));
 
 -- Procedure for adding a student
 CREATE OR REPLACE PROCEDURE add_student(
@@ -51,4 +51,26 @@ BEGIN
 INSERT INTO students (student_id, f_name, l_name, date_of_birth, email) VALUES (p_student_id, p_f_name, p_l_name, p_date_of_birth, p_email);
 COMMIT;
 DBMS_OUTPUT.PUT_LINE('Student added successfully!');
+END;
+
+-- update student procedure
+CREATE OR REPLACE PROCEDURE update_student(
+p_student_id IN NUMBER,
+p_f_name IN VARCHAR2,
+p_l_name IN VARCHAR2,
+p_date_of_birth IN DATE,
+p_email IN VARCHAR2
+)AS
+BEGIN
+UPDATE students
+SET f_name = p_f_name, l_name = p_l_name, date_of_birth = p_date_of_birth, email = p_email
+WHERE student_id = p_student_id;
+COMMIT;
+DBMS_OUTPUT.PUT_LINE('Student updated successfully!');
+EXCEPTION
+WHEN NO_DATA_FOUND THEN 
+DBMS_OUTPUT.PUT_LINE('Student not found!');
+WHEN OTHERS THEN 
+DBMS_OUTPUT.PUT_LINE('Error occured while updating student:');
+ROLLBACK;
 END;
